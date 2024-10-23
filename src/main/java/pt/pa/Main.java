@@ -22,8 +22,31 @@ public class Main {
 
         System.out.println(uniqueCount);
         //TODO: 1. show only unique numbers
+        // TODO 1: Exibir apenas números únicos
+        System.out.println("\nNúmeros únicos:");
+        for (Integer key : uniqueCount.keys()) {
+            System.out.println(key); // Imprime as chaves (números únicos)
+        }
 
-        //TODO: 2. show only (sorted) unique numbers and how many times they occur
-     }
+        // TODO 2: Exibir números únicos ordenados e suas respectivas ocorrências
+        System.out.println("\nNúmeros únicos ordenados e suas ocorrências:");
+        for (Integer key : uniqueCount.keys()) {
+            System.out.printf("Número: %d, Ocorrências: %d\n", key, uniqueCount.get(key));
+        }
+
+        // Testa a remoção de algumas chaves e exibe a árvore resultante
+        System.out.println("\nRemovendo o número 4 (com múltiplas ocorrências):");
+        uniqueCount.remove(4); // Remove o número 4
+        System.out.println(uniqueCount);
+
+        System.out.println("\nRemovendo o número 7:");
+        uniqueCount.remove(7); // Remove o número 7
+        System.out.println(uniqueCount);
+
+        System.out.println("\nRemovendo o número 1:");
+        uniqueCount.remove(1); // Remove o número 1
+        System.out.println(uniqueCount);
+
+    }
 
 }

@@ -12,7 +12,6 @@ import java.util.List;
  * @param <V> the type of mapped values
  */
 public class MapBST<K extends Comparable<K>, V> implements Map<K,V> {
-
     private BSTNode root;
 
     public MapBST() {
@@ -34,7 +33,7 @@ public class MapBST<K extends Comparable<K>, V> implements Map<K,V> {
     private V insertBST(K key, V value, BSTNode treeRoot) {
         int comparison = key.compareTo( treeRoot.key );
         if( comparison == 0) {
-            //key already found, replace value blindly
+            //key already found, replace value
             V oldValue = treeRoot.value;
             treeRoot.value = value;
             return oldValue;
@@ -88,7 +87,7 @@ public class MapBST<K extends Comparable<K>, V> implements Map<K,V> {
                 parent.right = null;
             }
         }
-        //case 3: has both sub-tree; two possible methods
+        //case 3: has both sub-trees; two possible methods
         //1 - replace node contents with rightmost contents of the left sub-tree (maximum key)
         //2 - replace node contents with leftmost contents of the right sub-tree (minimum key)
         //Following code uses method #2
@@ -119,8 +118,32 @@ public class MapBST<K extends Comparable<K>, V> implements Map<K,V> {
         return removedValue; //return previously associated value with removed key
     }
 
+    // Implementação do método getLeftmostNode, pesquisa o nó mais à esquerda (chave mínima)
     private BSTNode getLeftmostNode(BSTNode treeRoot) {
-        throw new UnsupportedOperationException("Not implemented yet.");
+        if (treeRoot == null) {
+            return null;
+        }
+        BSTNode current = treeRoot;
+        while (current.left != null) {
+            current = current.left; // Navega até o nó mais à esquerda
+        }
+        return current; // Retorna o nó mais à esquerda
+    }
+
+    // Implementação do método searchNodeWithKey, pesquisa um nó com a chave fornecida
+    private BSTNode searchNodeWithKey(K key, BSTNode treeRoot) {
+        if (treeRoot == null) {
+            return null; // Se a árvore ou subárvore for nula, a chave não existe
+        }
+
+        int comparison = key.compareTo(treeRoot.key);
+        if (comparison == 0) {
+            return treeRoot; // Chave encontrada
+        } else if (comparison < 0) {
+            return searchNodeWithKey(key, treeRoot.left); // Pesquisa na subárvore esquerda
+        } else {
+            return searchNodeWithKey(key, treeRoot.right); // Pesquisa na subárvore direita
+        }
     }
 
     @Override
@@ -130,40 +153,36 @@ public class MapBST<K extends Comparable<K>, V> implements Map<K,V> {
         return searchNodeWithKey(key, this.root) != null;
     }
 
-    private BSTNode searchNodeWithKey(K key, BSTNode treeRoot) {
-        throw new UnsupportedOperationException("Not implemented yet.");
-    }
-
+    // Alterar o método keys() para usar in-order traversal
     @Override
     public Collection<K> keys() {
         List<K> keys = new ArrayList<>();
-        appendKeys(this.root, keys);
+        inOrderKeys(this.root, keys);
         return keys;
     }
 
-    private void appendKeys(BSTNode treeRoot, List<K> keys) {
-        if(treeRoot == null) return;
+    private void inOrderKeys(BSTNode treeRoot, List<K> keys) {
+        if (treeRoot == null) return;
 
-        //pre-order traversal
-        keys.add(treeRoot.key);
-        appendKeys(treeRoot.left, keys);
-        appendKeys(treeRoot.right, keys);
+        inOrderKeys(treeRoot.left, keys); // Visita a subárvore esquerda
+        keys.add(treeRoot.key); // Adiciona a chave atual
+        inOrderKeys(treeRoot.right, keys); // Visita a subárvore direita
     }
 
+    // Alterar o método values() para usar in-order traversal
     @Override
     public Collection<V> values() {
         List<V> values = new ArrayList<>();
-        appendValues(this.root, values);
+        inOrderValues(this.root, values);
         return values;
     }
 
-    private void appendValues(BSTNode treeRoot, List<V> values) {
-        if(treeRoot == null) return;
+    private void inOrderValues(BSTNode treeRoot, List<V> values) {
+        if (treeRoot == null) return;
 
-        //pre-order traversal
-        values.add(treeRoot.value);
-        appendValues(treeRoot.left, values);
-        appendValues(treeRoot.right, values);
+        inOrderValues(treeRoot.left, values); // Visita a subárvore esquerda
+        values.add(treeRoot.value); // Adiciona o valor atual
+        inOrderValues(treeRoot.right, values); // Visita a subárvore direita
     }
 
     @Override
@@ -199,7 +218,6 @@ public class MapBST<K extends Comparable<K>, V> implements Map<K,V> {
     }
 
     private void inOrderPrettyString(BSTNode treeRoot, StringBuilder prefix, boolean isTail, StringBuilder sb) {
-
         if(treeRoot.right != null) {
             inOrderPrettyString(treeRoot.right, new StringBuilder().append(prefix).append(isTail ? "│   " : "    "), false, sb);
         }
